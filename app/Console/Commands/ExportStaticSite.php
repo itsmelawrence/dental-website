@@ -43,7 +43,7 @@ class ExportStaticSite extends Command
         File::ensureDirectoryExists($output);
         File::copyDirectory(public_path('build'), $output.'/build');
         File::copyDirectory(public_path('images'), $output.'/images');
-        File::copy(public_path('favicon.ico'), $output.'/favicon.ico');
+        File::copy(public_path('favicon.svg'), $output.'/favicon.svg');
         File::put($output.'/.nojekyll', '');
         URL::useOrigin($siteOrigin);
         URL::forceScheme($urlParts['scheme']);
@@ -100,6 +100,6 @@ class ExportStaticSite extends Command
 
         $content = str_replace($siteOrigin, $siteUrl, $content);
 
-        return str_replace(['="/images/', '="/build/'], ['="'.$basePath.'/images/', '="'.$basePath.'/build/'], $content);
+        return str_replace(['="/images/', '="/build/', '="/favicon.svg"'], ['="'.$basePath.'/images/', '="'.$basePath.'/build/', '="'.$basePath.'/favicon.svg"'], $content);
     }
 }

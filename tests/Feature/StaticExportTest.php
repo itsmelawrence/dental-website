@@ -45,7 +45,9 @@ class StaticExportTest extends TestCase
 
             $this->assertSame(0, $exitCode, Artisan::output());
             $this->assertFileExists($output.'/.nojekyll');
+            $this->assertFileExists($output.'/favicon.svg');
             $this->assertStringContainsString('href="https://example.github.io/dental-website"', File::get($output.'/index.html'));
+            $this->assertStringContainsString('href="/dental-website/favicon.svg"', File::get($output.'/index.html'));
             $this->assertStringContainsString('href="https://example.github.io/dental-website/about"', File::get($output.'/index.html'));
             $this->assertStringContainsString('src="/dental-website/images/demo-consultation.jpg"', File::get($output.'/index.html'));
             $this->assertStringContainsString('https://example.github.io/dental-website/services/cleaning', File::get($output.'/sitemap.xml'));

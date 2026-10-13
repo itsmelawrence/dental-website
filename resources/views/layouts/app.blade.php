@@ -24,6 +24,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ $clinic['brand']['primary'] }}">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="description" content="{{ $description }}">
     @if($clinic['demo'])<meta name="robots" content="noindex, nofollow">@endif
     <meta property="og:type" content="website">
