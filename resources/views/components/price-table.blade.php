@@ -1,0 +1,2 @@
+@props(['services'])
+<div class="price-table"><div class="price-table-head"><span>Treatment</span><span>Starting price</span></div>@foreach($services as $service)<a href="{{ route('services.show', $service['slug']) }}"><span>{{ $service['name'] }}</span><strong>₱{{ number_format($service['price_from']) }}</strong></a>@endforeach</div><p class="fine-print">Indicative starting prices only. The clinic will confirm your treatment plan and final quotation after an assessment.</p>

@@ -1,58 +1,67 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dental clinic website template
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A reusable Laravel 13 and Blade website for Philippine dental clinics. The included **Hiraya Dental Studio** is fictional demo content. Replace its details, images, prices, claims, and privacy notice before any public launch.
 
-## About Laravel
+## Quick start
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Requirements: PHP 8.3+, Composer, Node.js, and npm. No database is needed for the website or its local booking flow.
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+npm install
+npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Open the URL printed by `php artisan serve` (normally `http://127.0.0.1:8000`). For development with live frontend updates, run `npm run dev` in a second terminal. Run `php artisan test` for the feature suite.
 
-## Contributing
+The default mail driver is `log`, so local appointment enquiries appear in `storage/logs/laravel.log` rather than being delivered. Session and cache use files; the queue uses `sync`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Re-skin for a clinic
 
-## Code of Conduct
+Edit **only [`config/clinic.php`](config/clinic.php)** for clinic content and branding. It contains the name, logo, colours and font stacks, contact and chat links, hours and branches, credentials, statistics, hero and story copy, services and prices, dentists, HMO and payment details, testimonials, FAQs, gallery, booking, privacy, and SEO values. The visible design reads those values at render time.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Set `demo` to `false` after replacing the demo content.
+2. Add a clinic logo and real, consented photos under `public/images`, then update the image paths and alt text. The bundled hero photograph is generated demo imagery; dentist portraits and before/after results are intentionally empty.
+3. Replace every sample phone number, email address, chat link, branch, hours, starting price, dentist profile, and `SAMPLE-PRC` licence value. Set `credentials.pda_member` only when verified. Add HMO names only after confirming actual acceptance.
+4. Set `brand.primary`, `brand.secondary`, `brand.accent`, `brand.font_heading`, and `brand.font_body`. CSS theme tokens map to these values; choose colour combinations with WCAG AA contrast.
+5. Review the privacy notice and set its contact and actual retention period. Have the clinic review it before launch. The [National Privacy Commission](https://privacy.gov.ph/data-privacy-act-/) explains the information and data-subject rights covered by RA 10173.
+6. Check every page, treatment description, medical claim, price, licence, image consent, and contact link with the clinic before publishing.
 
-## Security Vulnerabilities
+The contact `messenger` value should be an `https://m.me/your-page` URL, `viber` a `viber://chat?number=%2B63...` link, and `whatsapp` an `https://wa.me/63...` URL. Use the clinic's own verified accounts. The default demo links are examples only.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Appointment handling
 
-## License
+### Laravel-hosted site
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Leave `booking.form_action` empty. The form posts to `POST /book`, which validates required fields, Philippine mobile format, future date, chosen service and dentist, consent, and a honeypot. The route is limited to five requests per minute. A valid request sends a `BookingEnquiry` email synchronously to `booking.recipient_email`, falling back to `contact.email`. No enquiry is saved to the database. Notes are limited to scheduling details; the form asks visitors not to include medical information.
+
+For live delivery, configure a working Laravel mail transport in `.env` and a clinic-owned recipient email in `config/clinic.php`. Confirm deliverability, mailbox security, the message content, and the clinic's response process before launch. A successful form response means the mail transport accepted the message; the clinic must still confirm the appointment.
+
+### Static demo
+
+Set `booking.form_action` to a working third-party form URL. The form then uses a normal HTML POST so it works without Laravel. For example, [Formspree](https://formspree.io/plans/) currently offers a free testing/development tier with a monthly submission limit; use the clinic's own form ID and check the provider's current terms, data handling, spam controls, and limits. The provider controls the static form's success page and server-side spam protection. The Laravel route's rate limit does not apply to static hosting.
+
+Build and export for a **root-domain** static host:
+
+```bash
+npm run build
+php artisan site:export https://demo.example.com
+```
+
+The command writes `dist/` with HTML for every page, treatment page, `404.html`, `sitemap.xml`, `robots.txt`, the built CSS/JS, and images. Upload the contents of `dist/` to a static host that serves directory `index.html` files. The exporter refuses to run without an external form endpoint so it cannot silently publish a broken booking form. Run it with the final domain URL because page links, canonicals, and the sitemap are absolute. Re-export after changing clinic config or assets. This export targets root-domain hosting; a subdirectory such as a default GitHub Pages repository URL needs URL rewriting or a custom domain.
+
+## Deployment and template use
+
+- Host the Laravel app with the web root pointed at `public/`, `APP_DEBUG=false`, a unique `APP_KEY`, writable `storage/` and `bootstrap/cache/`, a working mail transport, and HTTPS. Run `composer install --no-dev --optimize-autoloader` and `npm run build` during deployment.
+- The project does not require database migrations for v1. Laravel's unused starter database files remain available if a future clinic needs them.
+- Set the repository as a **GitHub template repository** in GitHub settings after creating and pushing a repository. Each clinic can then start from the template and edit its `config/clinic.php`.
+- Validate desktop and mobile rendering, keyboard navigation, links, form delivery, and accessibility with actual clinic data before launch.
+
+## Structure
+
+The website uses `resources/views/layouts/app.blade.php`, reusable components under `resources/views/components/`, pages under `resources/views/pages/`, and small vanilla JS modules under `resources/js/`. Tailwind CSS 4 and the clinic theme tokens live in `resources/css/app.css`; Vite builds the assets. `PageController` serves public pages, sitemap, and robots; `BookingController` handles local enquiries. `ExportStaticSite` prepares the static demo.
+
+Direct PHP packages are `laravel/framework` and `laravel/tinker`; development packages are `fakerphp/faker`, `laravel/boost`, `laravel/pail`, `laravel/pao`, `laravel/pint`, `mockery/mockery`, `nunomaduro/collision`, and `phpunit/phpunit`. Direct npm development packages are `@tailwindcss/vite`, `tailwindcss`, `vite`, `laravel-vite-plugin`, and `concurrently`; `@laravel/multiplex` is optional in the Laravel scaffold. Exact resolved versions are pinned in `composer.lock` and `package-lock.json`.

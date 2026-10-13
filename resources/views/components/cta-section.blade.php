@@ -1,0 +1,2 @@
+@props(['title' => 'Ready to take the next step?', 'text' => 'Tell us what you need and we’ll help you plan a comfortable first visit.'])
+<section class="cta-section"><div class="container-site cta-inner"><div><span class="eyebrow eyebrow-light">Let’s make it easy</span><h2>{{ $title }}</h2><p>{{ $text }}</p></div><a class="button button-light" href="{{ route('contact') }}#booking">Book an appointment <span aria-hidden="true">↗</span></a></div></section>

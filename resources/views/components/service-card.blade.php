@@ -1,0 +1,2 @@
+@props(['service'])
+<article class="service-card"><div class="service-icon"><x-icon :name="$service['icon']" /></div><h3>{{ $service['name'] }}</h3><p>{{ $service['short'] }}</p><div class="service-card-bottom"><span>From <strong>₱{{ number_format($service['price_from']) }}</strong></span><a href="{{ route('services.show', $service['slug']) }}" aria-label="Explore {{ $service['name'] }}">↗</a></div></article>

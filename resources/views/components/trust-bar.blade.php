@@ -1,0 +1,2 @@
+@php($clinic = config('clinic'))
+<section class="trust-bar" aria-label="Clinic at a glance"><div class="container-site trust-inner"><div class="trust-intro"><span aria-hidden="true">✳</span><strong>Good care begins with trust.</strong></div><div class="trust-stats">@foreach($clinic['stats'] as $stat)<div><strong>{{ $stat['value'] }}</strong><span>{{ $stat['label'] }}</span></div>@endforeach</div></div>@if($clinic['credentials']['pda_member'])<div class="container-site trust-credential">Philippine Dental Association member</div>@endif</section>

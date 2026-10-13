@@ -1,0 +1,2 @@
+@props(['items'])
+<div class="faq-list" data-faq-list>@foreach($items as $index => $faq)<div class="faq-item"><h3><button type="button" id="faq-button-{{ $index }}" aria-expanded="false" aria-controls="faq-panel-{{ $index }}" data-faq-button><span>{{ $faq['question'] }}</span><span class="faq-plus" aria-hidden="true">+</span></button></h3><div id="faq-panel-{{ $index }}" role="region" aria-labelledby="faq-button-{{ $index }}" hidden data-faq-panel><p>{{ $faq['answer'] }}</p></div></div>@endforeach</div>
