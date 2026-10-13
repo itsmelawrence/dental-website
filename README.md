@@ -40,24 +40,32 @@ Leave `booking.form_action` empty. The form posts to `POST /book`, which validat
 
 For live delivery, configure a working Laravel mail transport in `.env` and a clinic-owned recipient email in `config/clinic.php`. Confirm deliverability, mailbox security, the message content, and the clinic's response process before launch. A successful form response means the mail transport accepted the message; the clinic must still confirm the appointment.
 
-### Static demo
+### Static hosting and public demo
 
 Set `booking.form_action` to a working third-party form URL. The form then uses a normal HTML POST so it works without Laravel. For example, [Formspree](https://formspree.io/plans/) currently offers a free testing/development tier with a monthly submission limit; use the clinic's own form ID and check the provider's current terms, data handling, spam controls, and limits. The provider controls the static form's success page and server-side spam protection. The Laravel route's rate limit does not apply to static hosting.
 
-Build and export for a **root-domain** static host:
+Build and export for a static host:
 
 ```bash
 npm run build
 php artisan site:export https://demo.example.com
 ```
 
-The command writes `dist/` with HTML for every page, treatment page, `404.html`, `sitemap.xml`, `robots.txt`, the built CSS/JS, and images. Upload the contents of `dist/` to a static host that serves directory `index.html` files. The exporter refuses to run without an external form endpoint so it cannot silently publish a broken booking form. Run it with the final domain URL because page links, canonicals, and the sitemap are absolute. Re-export after changing clinic config or assets. This export targets root-domain hosting; a subdirectory such as a default GitHub Pages repository URL needs URL rewriting or a custom domain.
+The command writes `dist/` with HTML for every page, treatment page, `404.html`, `sitemap.xml`, `robots.txt`, `.nojekyll`, the built CSS/JS, and images. Upload the contents to a static host that serves directory `index.html` files. The exporter requires an external form endpoint for a functioning static booking form. Run it with the final URL because page links, canonicals, and the sitemap are absolute. Repository subpaths such as GitHub Pages are supported.
+
+To publish a showcase without collecting appointment details, leave `booking.form_action` empty and use the demo option. It visibly disables the booking form in the exported copy while leaving the Laravel template's local booking route intact:
+
+```bash
+php artisan site:export https://itsmelawrence.github.io/dental-website --demo
+```
+
+The `gh-pages` branch contains this export and is the GitHub Pages publishing source. Re-export and update that branch after changing clinic config or assets. GitHub Pages serves static files only; deploy the Laravel application to a PHP host for the email booking route.
 
 ## Deployment and template use
 
 - Host the Laravel app with the web root pointed at `public/`, `APP_DEBUG=false`, a unique `APP_KEY`, writable `storage/` and `bootstrap/cache/`, a working mail transport, and HTTPS. Run `composer install --no-dev --optimize-autoloader` and `npm run build` during deployment.
 - The project does not require database migrations for v1. Laravel's unused starter database files remain available if a future clinic needs them.
-- Set the repository as a **GitHub template repository** in GitHub settings after creating and pushing a repository. Each clinic can then start from the template and edit its `config/clinic.php`.
+- This repository is a **GitHub template repository**. Each clinic can start from it and edit its `config/clinic.php`.
 - Validate desktop and mobile rendering, keyboard navigation, links, form delivery, and accessibility with actual clinic data before launch.
 
 ## Structure

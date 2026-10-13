@@ -25,6 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ $clinic['brand']['primary'] }}">
     <meta name="description" content="{{ $description }}">
+    @if($clinic['demo'])<meta name="robots" content="noindex, nofollow">@endif
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ $clinic['name'] }}">
     <meta property="og:title" content="{{ $pageTitle }}">

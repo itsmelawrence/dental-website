@@ -1,11 +1,14 @@
 @php
     $clinic = config('clinic');
+    $previewOnly = (bool) ($clinic['booking']['preview_only'] ?? false);
     $externalAction = filled($clinic['booking']['form_action']);
-    $action = $externalAction ? $clinic['booking']['form_action'] : route('booking.store');
+    $action = $previewOnly ? '#booking' : ($externalAction ? $clinic['booking']['form_action'] : route('booking.store'));
 @endphp
-<form id="booking" class="booking-form" action="{{ $action }}" method="post" data-booking-form data-local="{{ $externalAction ? 'false' : 'true' }}">
-    @unless($externalAction) @csrf @endunless
+<form id="booking" class="booking-form" action="{{ $action }}" method="post" data-booking-form data-local="{{ $externalAction || $previewOnly ? 'false' : 'true' }}">
+    @unless($externalAction || $previewOnly) @csrf @endunless
     <div class="form-heading"><span class="eyebrow">Appointment enquiry</span><h2>Let’s find a time for you.</h2><p>Share a few details and the clinic will confirm your appointment.</p></div>
+    @if($previewOnly)<div class="form-feedback" role="status">This is a public template demo. Appointment requests are disabled until a clinic connects its own booking service.</div>@endif
+    <fieldset class="booking-controls" @disabled($previewOnly)>
     @if(session('booking_success'))<div class="form-feedback success" role="status">{{ session('booking_success') }}</div>@endif
     @if($errors->any())<div class="form-feedback error" role="alert">Please check the highlighted fields and try again.</div>@endif
     <div class="form-grid">
@@ -23,4 +26,5 @@
     <div class="form-feedback" data-form-feedback role="status" aria-live="polite" hidden></div>
     <button class="button button-primary form-submit" type="submit">Send appointment request <span aria-hidden="true">↗</span></button>
     <p class="fine-print">This is an enquiry, not a confirmed booking. For urgent concerns, call {{ $clinic['contact']['emergency'] }}.</p>
+    </fieldset>
 </form>

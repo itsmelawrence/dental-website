@@ -201,6 +201,7 @@ h3 { font-size: 1.25rem; }
 
 .contact-grid { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(285px,.75fr); gap: 2rem; align-items: start; }
 .booking-form, .contact-card { padding: clamp(1.5rem, 3vw, 2.5rem); border: 1px solid #e1e9df; border-radius: 18px; background: #fff; box-shadow: 0 9px 28px #284f4015; }
+.booking-controls { min-width: 0; margin: 0; padding: 0; border: 0; }
 .form-heading h2 { margin: .7rem 0 .6rem; font-size: clamp(2rem,3vw,3rem); }
 .form-heading p { color: #60746e; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-top: 2rem; }

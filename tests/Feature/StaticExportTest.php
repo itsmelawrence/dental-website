@@ -35,4 +35,24 @@ class StaticExportTest extends TestCase
             File::deleteDirectory($output);
         }
     }
+
+    public function test_demo_export_supports_github_pages_subdirectory_without_accepting_bookings(): void
+    {
+        $output = base_path('dist/test-export');
+
+        try {
+            $exitCode = Artisan::call('site:export', ['url' => 'https://example.github.io/dental-website', '--output' => 'dist/test-export', '--demo' => true]);
+
+            $this->assertSame(0, $exitCode, Artisan::output());
+            $this->assertFileExists($output.'/.nojekyll');
+            $this->assertStringContainsString('href="https://example.github.io/dental-website"', File::get($output.'/index.html'));
+            $this->assertStringContainsString('href="https://example.github.io/dental-website/about"', File::get($output.'/index.html'));
+            $this->assertStringContainsString('src="/dental-website/images/demo-consultation.jpg"', File::get($output.'/index.html'));
+            $this->assertStringContainsString('https://example.github.io/dental-website/services/cleaning', File::get($output.'/sitemap.xml'));
+            $this->assertStringContainsString('Appointment requests are disabled', File::get($output.'/contact/index.html'));
+            $this->assertStringContainsString('<fieldset class="booking-controls" disabled>', File::get($output.'/contact/index.html'));
+        } finally {
+            File::deleteDirectory($output);
+        }
+    }
 }
